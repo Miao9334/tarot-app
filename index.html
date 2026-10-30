@@ -1,274 +1,129 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>78张全牌阵数字塔罗体验</title>
-    <style>
-        :root {
-            --bg-color: #080912;
-            --card-back-bg: linear-gradient(135deg, #1e1f38, #2d2f5a);
-            --card-front-bg: linear-gradient(135deg, #2b2245, #15162c);
-            --accent-color: #f3e5ab; 
-            --text-color: #f0f0f0;
-        }
+  <meta charset="UTF-8">
+  <title>78张全牌阵数字塔罗体验</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 20px;
-            overflow-x: hidden;
-        }
+    body, html {
+      width: 100%;
+      height: 100%;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      overflow-x: hidden;
+    }
 
-        .container {
-            max-width: 950px;
-            width: 100%;
-            text-align: center;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(243, 229, 171, 0.2);
-            margin-top: 10px;
-        }
+    /* 1. 封面视图样式 */
+    #cover-view {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: url('cover.png') center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+      transition: opacity 0.6s ease, visibility 0.6s;
+    }
 
-        h1 {
-            color: var(--accent-color);
-            margin-bottom: 5px;
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-        }
+    /* 封面隐藏时的状态 */
+    #cover-view.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
 
-        p.subtitle {
-            color: #aaa;
-            font-size: 0.9rem;
-            margin-bottom: 15px;
-        }
+    /* Start 按钮样式 */
+    .start-btn {
+      margin-top: 200px; /* 控制按钮在图片中的上下位置 */
+      padding: 14px 50px;
+      font-size: 24px;
+      font-weight: bold;
+      color: #d35400;
+      background-color: #fce868;
+      border: 4px solid #ffffff;
+      border-radius: 40px;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      transition: transform 0.2s, background-color 0.2s;
+    }
 
-        .input-group {
-            margin-bottom: 15px;
-        }
+    .start-btn:hover {
+      transform: scale(1.08);
+      background-color: #fff07c;
+    }
 
-        input[type="text"] {
-            width: 70%;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1px solid #444;
-            background: #15162c;
-            color: white;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.3s;
-        }
+    /* 2. 主塔罗应用视图样式（使用 background.png 作为底图） */
+    #app-view {
+      min-height: 100vh;
+      background: url('background.png') center/cover repeat-y fixed;
+      padding: 40px 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #333333; /* 文字颜色可根据底图深浅调整 */
+    }
 
-        input[type="text"]:focus {
-            border-color: var(--accent-color);
-        }
+    .container {
+      max-width: 950px;
+      width: 100%;
+      text-align: center;
+      background: rgba(255, 255, 255, 0.85); /* 半透明白色底，让文字更清晰 */
+      padding: 25px;
+      border-radius: 20px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
+      margin-top: 10px;
+    }
 
-        .error-msg {
-            color: #ff6b6b;
-            font-size: 0.8rem;
-            margin-top: 5px;
-            height: 15px;
-        }
+    h1 {
+      color: #b9770e;
+      margin-bottom: 5px;
+      font-size: 1.8rem;
+    }
 
-        /* 修复后的扇形牌阵舞台 */
-        .stage {
-            position: relative;
-            width: 100%;
-            height: 220px; /* 给予足够的纵向空间展示扇形弧度 */
-            margin: 30px 0 10px 0;
-            perspective: 1000px;
-        }
-
-        .tarot-card {
-            position: absolute;
-            /* 让所有牌的基准点落在舞台的水平中央、偏下方位置 */
-            left: 50%;
-            bottom: 20px;
-            width: 50px;   /* 78张牌稍微做窄一点点，排开才好看 */
-            height: 90px;
-            margin-left: -25px; /* 宽度的一半，用于精准居中 */
-            background: var(--card-back-bg);
-            border: 1px solid var(--accent-color);
-            border-radius: 5px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.6);
-            /* 关键：以底部中心为原点进行扇形旋转 */
-            transform-origin: bottom center;
-            transition: transform 0.3s ease, box-shadow 0.3s, opacity 0.3s;
-            padding: 2px;
-            box-sizing: border-box;
-        }
-
-        .tarot-card:hover {
-            transform: translateY(-30px) scale(1.2) rotate(0deg) !important;
-            box-shadow: 0 10px 25px rgba(243, 229, 171, 0.4);
-            z-index: 999 !important;
-        }
-
-        .card-back-content {
-            font-size: 0.8rem;
-            color: var(--accent-color);
-        }
-
-        /* 翻开后的样式 */
-        .tarot-card.flipped {
-            background: var(--card-front-bg);
-            border-color: #ffcc00;
-            z-index: 1000;
-        }
-
-        .card-symbol {
-            font-size: 1.2rem;
-            margin-bottom: 2px;
-        }
-
-        .card-name {
-            font-size: 0.5rem;
-            font-weight: bold;
-            color: var(--accent-color);
-            text-align: center;
-            line-height: 1;
-        }
-
-        /* 结果展示区 */
-        .result-box {
-            margin-top: 15px;
-            padding: 15px;
-            background: rgba(243, 229, 171, 0.04);
-            border-left: 4px solid var(--accent-color);
-            border-radius: 6px;
-            text-align: left;
-            min-height: 60px;
-            font-size: 0.9rem;
-        }
-
-        button.reset-btn {
-            background: transparent;
-            border: 1px solid var(--accent-color);
-            color: var(--accent-color);
-            padding: 8px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            margin-top: 15px;
-            font-size: 0.9rem;
-            transition: all 0.3s;
-        }
-
-        button.reset-btn:hover {
-            background: var(--accent-color);
-            color: var(--bg-color);
-        }
-    </style>
+    /* 其它原有样式可以在此补充 */
+  </style>
 </head>
 <body>
 
+  <!-- 第一页：封面视图 -->
+  <div id="cover-view">
+    <button class="start-btn" onclick="startApp()">Start</button>
+  </div>
+
+  <!-- 第二页：塔罗牌主应用视图 -->
+  <div id="app-view">
     <div class="container">
-        <h1>🔮 78张全牌阵数字塔罗</h1>
-        <p class="subtitle">在心中默念你的困惑，从下方扇形牌阵中凭直觉挑选一张牌</p>
-
-        <div class="input-group">
-            <input type="text" id="questionInput" placeholder="请输入你的问题（例如：朴综星有没有女朋友）">
-            <div id="errorMsg" class="error-msg"></div>
-        </div>
-
-        <!-- 扇形牌阵舞台 -->
-        <div class="stage" id="cardStage"></div>
-
-        <div class="result-box" id="resultBox">
-            <div style="color: var(--accent-color); font-weight: bold; margin-bottom: 4px;">牌面指引：</div>
-            <div id="resultText">请先输入问题，然后点击上方扇形中的任意一张牌...</div>
-        </div>
-
-        <button class="reset-btn" onclick="resetApp()">重置/重新抽牌</button>
+      <h1>塔罗牌在线占卜</h1>
+      <p class="subtitle">在下方输入你的问题，抽取你的专属指引</p>
+      
+      <!-- 你的输入框和抽牌区域 -->
+      <div style="margin: 20px 0;">
+        <input type="text" id="questionInput" placeholder="请输入你的问题..." style="padding: 10px; width: 60%; border-radius: 8px; border: 1px solid #ccc;">
+      </div>
+      
+      <div id="cardDeck">
+        <!-- 塔罗牌卡片会显示在这里 -->
+      </div>
+      
+      <div id="resultText" style="margin-top: 20px; font-weight: bold;"></div>
     </div>
+  </div>
 
-    <script>
-        const tarotDatabase = [
-            { symbol: "🃏", name: "愚者 (The Fool)", desc: "象征新的开始、无限的可能与冒险精神。放下顾虑，勇敢迈出那一步吧，宇宙会支撑你的探索。" },
-            { symbol: "🪄", name: "魔术师 (The Magician)", desc: "象征创造力、资源的整合与行动力。你已经具备了所需的一切工具，现在正是将想法转化为现实的时候。" },
-            { symbol: "🌙", name: "女祭司 (The High Priestess)", desc: "象征直觉、内在智慧与静观其变。多倾听内心的声音，答案其实已经在你心中，无需操之过急。" },
-            { symbol: "⭐", name: "星星 (The Star)", desc: "象征希望、治愈与灵感。经历了一段时间的迷茫后，前方正闪烁着清晰的光芒，保持乐观。" },
-            { symbol: "🎡", name: "命运之轮 (Wheel of Fortune)", desc: "象征转折点、命运的流动与顺势而为。事情正在发生变化，拥抱改变，顺应节奏即可。" },
-            { symbol: "⚔️", name: "宝剑王牌 (Ace of Swords)", desc: "象征清晰的思路、突破口的出现或真理的揭露。你将拥有极强的洞察力去解决眼前的难题。" },
-            { symbol: "🏆", name: "权杖圣杯 (Ace of Cups)", desc: "象征充沛的情感、灵感的迸发与内心的满足。保持对生活的热爱，好事正在靠近。" }
-        ];
-
-        const totalCards = 78;
-        const stage = document.getElementById("cardStage");
-
-        function initDeck() {
-            stage.innerHTML = "";
-            for (let i = 0; i < totalCards; i++) {
-                const card = document.createElement("div");
-                card.className = "tarot-card";
-                
-                // 调整扇形展开角度：从 -80度 到 +80度
-                const angle = -80 + (i / (totalCards - 1)) * 160; 
-                // 调整横向间距倍率，让 78 张牌完美展开成一个漂亮的弧形
-                const xOffset = (i - totalCards / 2) * 5.5; 
-                
-                card.style.transform = `translateX(${xOffset}px) rotate(${angle}deg)`;
-                card.style.zIndex = i;
-
-                card.innerHTML = `<div class="card-back-content">✨</div>`;
-                card.onclick = () => selectCard(card);
-                stage.appendChild(card);
-            }
-        }
-
-        function selectCard(selectedCard) {
-            const question = document.getElementById("questionInput").value.trim();
-            const errorMsg = document.getElementById("errorMsg");
-            
-            if (!question) {
-                errorMsg.textContent = "⚠️ 请先在上方输入框中写下你的问题或心愿哦！";
-                return;
-            } else {
-                errorMsg.textContent = "";
-            }
-
-            const randomCard = tarotDatabase[Math.floor(Math.random() * tarotDatabase.length)];
-            
-            const allCards = document.querySelectorAll(".tarot-card");
-            allCards.forEach(card => {
-                if (card === selectedCard) {
-                    card.classList.add("flipped");
-                    card.style.transform = `translateY(-40px) scale(1.5) rotate(0deg)`;
-                    card.innerHTML = `
-                        <div class="card-symbol">${randomCard.symbol}</div>
-                        <div class="card-name">${randomCard.name}</div>
-                    `;
-                } else {
-                    card.style.opacity = "0.1";
-                    card.style.pointerEvents = "none";
-                }
-            });
-
-            document.getElementById("resultText").innerHTML = 
-                `针对问题 <b style="color: var(--accent-color);">“${question}”</b>，你从 78 张牌阵中抽中了 <b style="color: var(--accent-color);">${randomCard.name}</b>。<br><br>${randomCard.desc}`;
-        }
-
-        function resetApp() {
-            document.getElementById("questionInput").value = "";
-            document.getElementById("errorMsg").textContent = "";
-            document.getElementById("resultText").textContent = "请先输入问题，然后点击上方扇形中的任意一张牌...";
-            initDeck();
-        }
-
-        initDeck();
-    </script>
+  <script>
+    // 点击 Start 按钮触发的函数：隐藏封面
+    function startApp() {
+      const cover = document.getElementById('cover-view');
+      cover.classList.add('hidden');
+    }
+  </script>
 </body>
 </html>
