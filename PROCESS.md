@@ -26,8 +26,6 @@ This document records the complete development journey of the **How is your day?
 - **Adopted Suggestions**:
   - **ChatGPT** use it to generate the initial background imagery (`background.png`) and the tarot cover art (`cover.png`) to establish the visual aesthetic.
   - **Gemini** use it in an iterative process to repeatedly debug and refine the frontend code, optimizing the CSS 3D card-flip matrix (`preserve-3d` and `backface-visibility: hidden`) and ensuring smooth interactions across the 78-card fan layout.
-- **Rejected Suggestions**:
-  - The AI initially recommended adopting a complex frontend framework for state management. Keeping in mind the project's requirement for minimalism, ease of deployment, and zero-build overhead, I rejected this suggestion and stuck with native HTML5, CSS3, and Vanilla JavaScript to ensure out-of-the-box execution.
 
 ## 5. Credits & Development History
 - Maintained a consistent and meaningful Git commit history throughout the development process, recording key feature updates in accordance with course guidelines.

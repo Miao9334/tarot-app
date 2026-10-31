@@ -12,9 +12,17 @@ A lightweight, elegant, and immersive web-based daily tarot reading experience. 
 ## Target Audience
 Young individuals who are looking for a moment of mindfulness, emotional comfort, or playful psychological inspiration during their busy daily routines or study schedules.
 
+## Screenshots
+
+**Cover View:**
+![Cover View](cover.png)
+
+**Main Interaction & Draw View:**
+![Main View](screenshot.png)
+
 ## How to Run
 Since this project is built with vanilla frontend technologies (HTML5, CSS3, and JavaScript), it requires no complex backend configuration or dependency installations:
 
 1. Clone or download this repository to your local machine:
    ```bash
-git clone https://github.com/Miao9334/tarot-app.git
+   git clone [https://github.com/Miao9334/tarot-app.git](https://github.com/Miao9334/tarot-app.git)
