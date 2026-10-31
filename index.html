@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8">
-  <title>78张全牌阵数字塔罗体验</title>
+  <title>How is your day? - Tarot</title>
   <style>
     * {
       box-sizing: border-box;
@@ -17,7 +17,7 @@
       overflow-x: hidden;
     }
 
-    /* 1. 封面视图样式 */
+    /* 1. 封面视图 */
     #cover-view {
       position: fixed;
       top: 0;
@@ -27,24 +27,22 @@
       background: url('cover.png') center/cover no-repeat;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: flex-end;
       align-items: center;
+      padding-bottom: 18vh;
       z-index: 1000;
       transition: opacity 0.6s ease, visibility 0.6s;
     }
 
-    /* 封面隐藏时的状态 */
     #cover-view.hidden {
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
     }
 
-    /* Start 按钮样式 */
     .start-btn {
-      margin-top: 200px; /* 控制按钮在图片中的上下位置 */
-      padding: 14px 50px;
-      font-size: 24px;
+      padding: 14px 60px;
+      font-size: 26px;
       font-weight: bold;
       color: #d35400;
       background-color: #fce868;
@@ -60,7 +58,7 @@
       background-color: #fff07c;
     }
 
-    /* 2. 主塔罗应用视图样式（使用 background.png 作为底图） */
+    /* 2. 主界面视图 */
     #app-view {
       min-height: 100vh;
       background: url('background.png') center/cover repeat-y fixed;
@@ -68,62 +66,324 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      color: #333333; /* 文字颜色可根据底图深浅调整 */
     }
 
-    .container {
-      max-width: 950px;
-      width: 100%;
+    /* 提示文字区域（替代输入框） */
+    .tip-box {
+      margin-top: 30px;
+      margin-bottom: 30px;
       text-align: center;
-      background: rgba(255, 255, 255, 0.85); /* 半透明白色底，让文字更清晰 */
-      padding: 25px;
-      border-radius: 20px;
-      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-      backdrop-filter: blur(10px);
-      margin-top: 10px;
     }
 
-    h1 {
+    .tip-box h2 {
+      font-size: 22px;
       color: #b9770e;
-      margin-bottom: 5px;
-      font-size: 1.8rem;
+      background: rgba(255, 255, 255, 0.85);
+      padding: 12px 28px;
+      border-radius: 30px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+      backdrop-filter: blur(5px);
     }
 
-    /* 其它原有样式可以在此补充 */
+    /* 78张牌扇形展开容器 */
+    .fan-container {
+      position: relative;
+      width: 100%;
+      max-width: 900px;
+      height: 280px;
+      margin: 20px auto;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* 卡片基础属性 */
+    .tarot-card {
+      position: absolute;
+      width: 80px;
+      height: 140px;
+      bottom: 20px;
+      transform-origin: 50% 180%;
+      cursor: pointer;
+      perspective: 1000px;
+      transition: transform 0.4s ease, top 0.4s ease, opacity 0.4s ease;
+    }
+
+    .tarot-card:hover {
+      z-index: 999 !important;
+    }
+
+    /* 3D 翻牌结构 */
+    .card-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      transition: transform 0.6s;
+      transform-style: preserve-3d;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    }
+
+    .tarot-card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 8px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 6px;
+      border: 2px solid #ffffff;
+    }
+
+    /* 卡牌背面 */
+    .card-back {
+      background: linear-gradient(135deg, #2c3e50, #4ca1af);
+      color: #f1c40f;
+      font-size: 20px;
+    }
+
+    /* 卡牌正面 */
+    .card-front {
+      background: #fffdf9;
+      color: #2c3e50;
+      transform: rotateY(180deg);
+    }
+
+    .card-symbol {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    .card-name {
+      font-size: 11px;
+      font-weight: bold;
+      color: #d35400;
+    }
+
+    /* 结果解读框 */
+    .result-box {
+      margin-top: 30px;
+      max-width: 600px;
+      width: 90%;
+      background: rgba(255, 255, 255, 0.9);
+      padding: 20px 25px;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+      backdrop-filter: blur(8px);
+      text-align: center;
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .result-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: #b9770e;
+      margin-bottom: 8px;
+    }
+
+    .result-desc {
+      font-size: 15px;
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* 黄色返回键样式 */
+    .reset-btn {
+      display: none; /* 默认隐藏，抽完牌后显示 */
+      margin-top: 20px;
+      padding: 10px 30px;
+      font-size: 16px;
+      font-weight: bold;
+      color: #d35400;
+      background-color: #fce868;
+      border: 3px solid #ffffff;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+      transition: transform 0.2s, background-color 0.2s;
+    }
+
+    .reset-btn:hover {
+      transform: scale(1.05);
+      background-color: #fff07c;
+    }
   </style>
 </head>
 <body>
 
-  <!-- 第一页：封面视图 -->
+  <!-- 第一页：封面 -->
   <div id="cover-view">
     <button class="start-btn" onclick="startApp()">Start</button>
   </div>
 
-  <!-- 第二页：塔罗牌主应用视图 -->
+  <!-- 第二页：主界面 -->
   <div id="app-view">
-    <div class="container">
-      <h1>塔罗牌在线占卜</h1>
-      <p class="subtitle">在下方输入你的问题，抽取你的专属指引</p>
-      
-      <!-- 你的输入框和抽牌区域 -->
-      <div style="margin: 20px 0;">
-        <input type="text" id="questionInput" placeholder="请输入你的问题..." style="padding: 10px; width: 60%; border-radius: 8px; border: 1px solid #ccc;">
-      </div>
-      
-      <div id="cardDeck">
-        <!-- 塔罗牌卡片会显示在这里 -->
-      </div>
-      
-      <div id="resultText" style="margin-top: 20px; font-weight: bold;"></div>
+    <!-- 提示文字区域 -->
+    <div class="tip-box">
+      <h2>✨ 抽取一张牌看看你的今日运势 ✨</h2>
     </div>
+
+    <!-- 78张牌扇形展牌区 -->
+    <div id="fanContainer" class="fan-container"></div>
+
+    <!-- 结果解读文本区域 -->
+    <div id="resultBox" class="result-box">
+      <div id="resultText" class="result-desc">请在上方扇形牌阵中凭直觉点击抽取一张塔罗牌。</div>
+    </div>
+
+    <!-- 黄色返回/重置键 -->
+    <button id="resetBtn" class="reset-btn" onclick="resetApp()">返回封面 · 重新占卜</button>
   </div>
 
   <script>
-    // 点击 Start 按钮触发的函数：隐藏封面
+    const tarotDatabase = [
+      { name: "0. 愚人 (The Fool)", symbol: "🌷", meaning: "【故事】米兰达夫人种下一颗郁金香种球，它带着好奇心悄悄离开了阳台去探索世界[cite: 15]。\n【牌意】梦的开始，对未来美好的期盼与期待。纯真、美好、充满可能[cite: 15]。" },
+      { name: "I. 魔术师 (The Magician)", symbol: "🌹", meaning: "【故事】彩虹尽头的月季花告诉郁金香：相信自己的力量[cite: 17]。\n【牌意】变幻的美丽。创造、聪慧、热情自信、善于表达[cite: 17]。\n【花语】青春美丽、活力、热情与希望[cite: 17]。" },
+      { name: "II. 女祭司 (The High Priestess)", symbol: "🪷", meaning: "【故事】池塘边只在月夜开放的白色昙花[cite: 19]。\n【牌意】昙花一现，刹那的美丽，寂寥的心。神秘、理性、纯洁、等待时机[cite: 19]。" },
+      { name: "III. 皇后 (The Empress)", symbol: "🌺", meaning: "【故事】玻璃花房里的粉色牡丹花，展现国色天香的气质与自信[cite: 21]。\n【牌意】富饶、温柔、美丽、热情，充满生命力[cite: 21]。" },
+      { name: "IV. 皇帝 (The Emperor)", symbol: "👑", meaning: "【故事】威严的帝王花，提醒探险者要打起十二分精神[cite: 23]。\n【牌意】胜利与荣耀。霸气、威严、权威、秩序与理智[cite: 23]。" },
+      { name: "V. 教皇 (The Hierophant)", symbol: "📖", meaning: "【故事】椅上自动开口说话的书本：人生中暂时不懂的事，到最后总会明白[cite: 25]。\n【牌意】精神的力量、灵魂的指引、教导与善于沟通[cite: 25]。" },
+      { name: "VI. 恋人 (The Lovers)", symbol: "💛", meaning: "【故事】日落晚霞中出现的金黄色心脏，象征情感的悸动[cite: 27]。\n【牌意】心动、缘分、幸福、志同道合、坠入爱河[cite: 27]。" },
+      { name: "VII. 战车 (The Chariot)", symbol: "🛒", meaning: "【故事】前往花园中心参加庆典，吹着风，知道自己准备好了[cite: 29]。\n【牌意】出发就现在！勇气、无畏、信心与奋斗[cite: 29]。" },
+      { name: "VIII. 力量 (Strength)", symbol: "🌸", meaning: "【故事】从石头缝隙中生长绽放的牵牛花[cite: 31]。\n【牌意】温柔的力量，以柔克刚，包容与执着[cite: 31]。" },
+      { name: "IX. 隐士 (The Hermit)", symbol: "🌼", meaning: "【故事】黑夜中借着星光向山顶前行的菊花[cite: 33]。\n【牌意】高洁、纯净、精神追求，孤独与寻找真理[cite: 33]。" },
+      { name: "X. 命运之轮 (Wheel of Fortune)", symbol: "⏰", meaning: "【故事】掌控花园白天与黑夜的水晶挂钟[cite: 35]。\n【牌意】过去与将来，四季流转，一切皆是运与缘[cite: 35]。" },
+      { name: "XI. 正义 (Justice)", symbol: "⚖️", meaning: "【故事】米兰达给植物按比例称配肥料[cite: 37]。\n【牌意】公正，决策，平衡，理性判断[cite: 37]。" },
+      { name: "XII. 倒吊人 (The Hanged Man)", symbol: "🙃", meaning: "【故事】向下开放的曼陀罗花：我只是在做我自己的事情[cite: 39]。\n【牌意】牺牲，换位思考，内在的平静与纯净[cite: 39]。" },
+      { name: "XIII. 死神 (Death)", symbol: "🦋", meaning: "【故事】金鱼草花田旁桌上的头骨种荚，生死循环，干枯中孕育新生[cite: 41]。\n【牌意】是结束也是开始，转变，新生[cite: 41]。" },
+      { name: "XIV. 节制 (Temperance)", symbol: "⏳", meaning: "【故事】花丛中的水沙漏，让心渐渐平静下来[cite: 43]。\n【牌意】把问题交给时间，平衡，理性，调和[cite: 43]。" },
+      { name: "XV. 恶魔 (The Devil)", symbol: "🕷️", meaning: "【故事】红蜘蛛悄悄爬上郁金香的叶片啃食[cite: 45]。\n【牌意】解不脱的结，束缚，悲伤，遭遇意外破坏[cite: 45]。" },
+      { name: "XVI. 高塔 (The Tower)", symbol: "🌩️", meaning: "【故事】闪电击中高山花园，郁金香从悬崖边掉落[cite: 47]。\n【牌意】毁灭既是重生，灾难，突如其来的伤害[cite: 47]。" },
+      { name: "XVII. 星星 (The Star)", symbol: "⭐", meaning: "【故事】月亮湖边倒映的星光与游吟诗人的歌声[cite: 49]。\n【牌意】疗愈，宁静，小希望，内心指引与灵感[cite: 49]。" },
+      { name: "XVIII. 月亮 (The Moon)", symbol: "🌕", meaning: "【故事】月升之时，郁金香沉下心思考是否要继续前行[cite: 51]。\n【牌意】欢乐后的平静，神秘，未知，谨慎地思考[cite: 51]。" },
+      { name: "XIX. 太阳 (The Sun)", symbol: "☀️", meaning: "【故事】太阳初生，昨夜的月亮湖化为溪流，郁金香启程[cite: 53]。\n【牌意】黑夜终会过去，希望、成功、信心与光明[cite: 53]。" },
+      { name: "XX. 审判 (Judgement)", symbol: "🎺", meaning: "【故事】跋山涉水后终于找到花园，音乐会庆祝凯旋[cite: 55]。\n【牌意】命运的号角已响起，考验，转变，启示[cite: 55]。" },
+      { name: "XXI. 世界 (The World)", symbol: "🌍", meaning: "【故事】米兰达夫人将郁金香捧起，花开迎来了属于它的春天[cite: 57]。\n【牌意】花开了，圆满，新世界的开始，开启下一阶段[cite: 57]。" }
+    ];
+
+    const suits = ["权杖", "圣杯", "宝剑", "星币"];
+    const ranks = ["首牌", "2", "3", "4", "5", "6", "7", "8", "9", "10", "侍从", "骑士", "国王", "王后"];
+    suits.forEach(s => {
+      ranks.forEach(r => {
+        if (tarotDatabase.length < 78) {
+          tarotDatabase.push({
+            name: `${s}${r}`,
+            symbol: s === "权杖" ? "🪄" : s === "圣杯" ? "🏆" : s === "宝剑" ? "⚔️" : "🪙",
+            meaning: `这是来自【${s}元素】的指引，提示你在今日的行动、情感或思考中保持专注与平衡。`
+          });
+        }
+      });
+    });
+
+    let hasSelected = false;
+
+    // 点击 Start 开启占卜
     function startApp() {
-      const cover = document.getElementById('cover-view');
-      cover.classList.add('hidden');
+      document.getElementById('cover-view').classList.add('hidden');
     }
+
+    // 初始化生成 78 张扇形排列的卡牌
+    function initDeck() {
+      const container = document.getElementById('fanContainer');
+      container.innerHTML = '';
+      hasSelected = false;
+
+      // 隐藏返回按钮
+      document.getElementById('resetBtn').style.display = 'none';
+
+      const totalCards = 78;
+      const startAngle = -60;
+      const endAngle = 60;
+      const angleStep = (endAngle - startAngle) / (totalCards - 1);
+
+      for (let i = 0; i < totalCards; i++) {
+        const card = document.createElement('div');
+        card.className = 'tarot-card';
+        card.dataset.index = i;
+
+        const angle = startAngle + (i * angleStep);
+        card.style.transform = `rotate(${angle}deg)`;
+        card.style.zIndex = i;
+
+        card.innerHTML = `
+          <div class="card-inner">
+            <div class="card-back">✦</div>
+            <div class="card-front">
+              <div class="card-symbol" id="symbol-${i}">✨</div>
+              <div class="card-name" id="name-${i}">塔罗牌</div>
+            </div>
+          </div>
+        `;
+
+        card.onclick = () => selectCard(card, i);
+        container.appendChild(card);
+      }
+    }
+
+    // 点击抽牌逻辑
+    function selectCard(selectedCard, index) {
+      if (hasSelected) return;
+      hasSelected = true;
+
+      const randomCard = tarotDatabase[Math.floor(Math.random() * tarotDatabase.length)];
+
+      document.getElementById(`symbol-${index}`).innerText = randomCard.symbol;
+      document.getElementById(`name-${index}`).innerText = randomCard.name;
+
+      // 选中的牌翻面并高亮，其余牌淡出
+      const allCards = document.querySelectorAll('.tarot-card');
+      allCards.forEach((card) => {
+        if (card === selectedCard) {
+          card.classList.add('flipped');
+          card.style.transform = `translateY(-30px) scale(1.1)`;
+          card.style.zIndex = 1000;
+        } else {
+          card.style.opacity = "0.2";
+          card.style.pointerEvents = "none";
+        }
+      });
+
+      // 显示解读结果
+      const resultBox = document.getElementById("resultBox");
+      resultBox.innerHTML = `
+        <div class="result-title">🌟 你的今日运势指引 🌟</div>
+        <div class="result-desc">
+          抽中的牌是 <b>${randomCard.name}</b><br><br>
+          ${randomCard.meaning.replace(/\n/g, '<br>')}
+        </div>
+      `;
+
+      // 显示黄色的返回/重置按钮
+      document.getElementById('resetBtn').style.display = 'block';
+    }
+
+    // 重置并返回封面
+    function resetApp() {
+      // 1. 显示封面
+      document.getElementById('cover-view').classList.remove('hidden');
+      
+      // 2. 恢复初始提示文字
+      document.getElementById("resultBox").innerHTML = `
+        <div id="resultText" class="result-desc">请在上方扇形牌阵中凭直觉点击抽取一张塔罗牌。</div>
+      `;
+
+      // 3. 重新洗牌生成新的 78 张牌阵
+      initDeck();
+    }
+
+    // 页面加载完成后自动初始化牌阵
+    window.onload = initDeck;
   </script>
 </body>
 </html>
