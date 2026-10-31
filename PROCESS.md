@@ -14,11 +14,14 @@
   - For the reset flow, I refined the function so it not only clears the previous flipped state smoothly but also allows users to return to the cover view and reshuffle effortlessly.
 
 ## 3. User Trial & Iteration
-- **Testing Process**: I invited my roommate to test the web page without explaining any rules beforehand.
-- **Observations**: The roommate felt slightly overwhelmed by the dense array of 78 cards upon entering the main screen, and once a card was drawn, they were initially unsure how to start a new round.
-- **Improvements Made**:
-  - Added a prominent, friendly prompt box at the top of the page to guide the user's attention.
-  - Introduced a clear, bright yellow "Return to Cover · Reset" button below the result box, enabling users to restart their session easily.
+- **Testing Process**: I invited my roommate to test the web application without providing prior instructions to see how intuitively they could navigate the interface.
+- **Observations & Issues Identified**: 
+  - **Usability**: The roommate felt slightly overwhelmed by the dense array of 78 cards upon entering the main screen, and after drawing a card, they were initially unsure how to start a new round.
+  - **Logic/Data Bug**: During testing, we noticed that whenever a Minor Arcana card was drawn from the deck, the generated interpretation text remained identical across different cards, failing to provide unique feedback for individual Minor Arcana elements.
+- **Improvements & Debugging Made**:
+  - **Fixed Minor Arcana Interpretations**: Resolved the database logic issue so that each suit and rank in the Minor Arcana dynamically displays its corresponding unique card meaning and element guidance.
+  - **Enhanced Guidance**: Added a prominent, friendly prompt box at the top of the main page to direct user attention.
+  - **Added Reset Option**: Introduced a bright yellow "Return to Cover · Reset" button below the result container, allowing users to effortlessly reshuffle and restart the divination experience.
 
 ## 4. AI Tool Usage
 - **Adopted Suggestions**:

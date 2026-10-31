@@ -68,7 +68,7 @@
       align-items: center;
     }
 
-    /* 提示文字区域（替代输入框） */
+    /* 提示文字区域 */
     .tip-box {
       margin-top: 30px;
       margin-bottom: 30px;
@@ -200,7 +200,7 @@
 
     /* 黄色返回键样式 */
     .reset-btn {
-      display: none; /* 默认隐藏，抽完牌后显示 */
+      display: none;
       margin-top: 20px;
       padding: 10px 30px;
       font-size: 16px;
@@ -229,7 +229,6 @@
 
   <!-- 第二页：主界面 -->
   <div id="app-view">
-    <!-- 提示文字区域 -->
     <div class="tip-box">
       <h2>✨ 抽取一张牌看看你的今日运势 ✨</h2>
     </div>
@@ -248,58 +247,105 @@
 
   <script>
     const tarotDatabase = [
-      { name: "0. 愚人 (The Fool)", symbol: "🌷", meaning: "【故事】米兰达夫人种下一颗郁金香种球，它带着好奇心悄悄离开了阳台去探索世界[cite: 15]。\n【牌意】梦的开始，对未来美好的期盼与期待。纯真、美好、充满可能[cite: 15]。" },
-      { name: "I. 魔术师 (The Magician)", symbol: "🌹", meaning: "【故事】彩虹尽头的月季花告诉郁金香：相信自己的力量[cite: 17]。\n【牌意】变幻的美丽。创造、聪慧、热情自信、善于表达[cite: 17]。\n【花语】青春美丽、活力、热情与希望[cite: 17]。" },
-      { name: "II. 女祭司 (The High Priestess)", symbol: "🪷", meaning: "【故事】池塘边只在月夜开放的白色昙花[cite: 19]。\n【牌意】昙花一现，刹那的美丽，寂寥的心。神秘、理性、纯洁、等待时机[cite: 19]。" },
-      { name: "III. 皇后 (The Empress)", symbol: "🌺", meaning: "【故事】玻璃花房里的粉色牡丹花，展现国色天香的气质与自信[cite: 21]。\n【牌意】富饶、温柔、美丽、热情，充满生命力[cite: 21]。" },
-      { name: "IV. 皇帝 (The Emperor)", symbol: "👑", meaning: "【故事】威严的帝王花，提醒探险者要打起十二分精神[cite: 23]。\n【牌意】胜利与荣耀。霸气、威严、权威、秩序与理智[cite: 23]。" },
-      { name: "V. 教皇 (The Hierophant)", symbol: "📖", meaning: "【故事】椅上自动开口说话的书本：人生中暂时不懂的事，到最后总会明白[cite: 25]。\n【牌意】精神的力量、灵魂的指引、教导与善于沟通[cite: 25]。" },
-      { name: "VI. 恋人 (The Lovers)", symbol: "💛", meaning: "【故事】日落晚霞中出现的金黄色心脏，象征情感的悸动[cite: 27]。\n【牌意】心动、缘分、幸福、志同道合、坠入爱河[cite: 27]。" },
-      { name: "VII. 战车 (The Chariot)", symbol: "🛒", meaning: "【故事】前往花园中心参加庆典，吹着风，知道自己准备好了[cite: 29]。\n【牌意】出发就现在！勇气、无畏、信心与奋斗[cite: 29]。" },
-      { name: "VIII. 力量 (Strength)", symbol: "🌸", meaning: "【故事】从石头缝隙中生长绽放的牵牛花[cite: 31]。\n【牌意】温柔的力量，以柔克刚，包容与执着[cite: 31]。" },
-      { name: "IX. 隐士 (The Hermit)", symbol: "🌼", meaning: "【故事】黑夜中借着星光向山顶前行的菊花[cite: 33]。\n【牌意】高洁、纯净、精神追求，孤独与寻找真理[cite: 33]。" },
-      { name: "X. 命运之轮 (Wheel of Fortune)", symbol: "⏰", meaning: "【故事】掌控花园白天与黑夜的水晶挂钟[cite: 35]。\n【牌意】过去与将来，四季流转，一切皆是运与缘[cite: 35]。" },
-      { name: "XI. 正义 (Justice)", symbol: "⚖️", meaning: "【故事】米兰达给植物按比例称配肥料[cite: 37]。\n【牌意】公正，决策，平衡，理性判断[cite: 37]。" },
-      { name: "XII. 倒吊人 (The Hanged Man)", symbol: "🙃", meaning: "【故事】向下开放的曼陀罗花：我只是在做我自己的事情[cite: 39]。\n【牌意】牺牲，换位思考，内在的平静与纯净[cite: 39]。" },
-      { name: "XIII. 死神 (Death)", symbol: "🦋", meaning: "【故事】金鱼草花田旁桌上的头骨种荚，生死循环，干枯中孕育新生[cite: 41]。\n【牌意】是结束也是开始，转变，新生[cite: 41]。" },
-      { name: "XIV. 节制 (Temperance)", symbol: "⏳", meaning: "【故事】花丛中的水沙漏，让心渐渐平静下来[cite: 43]。\n【牌意】把问题交给时间，平衡，理性，调和[cite: 43]。" },
-      { name: "XV. 恶魔 (The Devil)", symbol: "🕷️", meaning: "【故事】红蜘蛛悄悄爬上郁金香的叶片啃食[cite: 45]。\n【牌意】解不脱的结，束缚，悲伤，遭遇意外破坏[cite: 45]。" },
-      { name: "XVI. 高塔 (The Tower)", symbol: "🌩️", meaning: "【故事】闪电击中高山花园，郁金香从悬崖边掉落[cite: 47]。\n【牌意】毁灭既是重生，灾难，突如其来的伤害[cite: 47]。" },
-      { name: "XVII. 星星 (The Star)", symbol: "⭐", meaning: "【故事】月亮湖边倒映的星光与游吟诗人的歌声[cite: 49]。\n【牌意】疗愈，宁静，小希望，内心指引与灵感[cite: 49]。" },
-      { name: "XVIII. 月亮 (The Moon)", symbol: "🌕", meaning: "【故事】月升之时，郁金香沉下心思考是否要继续前行[cite: 51]。\n【牌意】欢乐后的平静，神秘，未知，谨慎地思考[cite: 51]。" },
-      { name: "XIX. 太阳 (The Sun)", symbol: "☀️", meaning: "【故事】太阳初生，昨夜的月亮湖化为溪流，郁金香启程[cite: 53]。\n【牌意】黑夜终会过去，希望、成功、信心与光明[cite: 53]。" },
-      { name: "XX. 审判 (Judgement)", symbol: "🎺", meaning: "【故事】跋山涉水后终于找到花园，音乐会庆祝凯旋[cite: 55]。\n【牌意】命运的号角已响起，考验，转变，启示[cite: 55]。" },
-      { name: "XXI. 世界 (The World)", symbol: "🌍", meaning: "【故事】米兰达夫人将郁金香捧起，花开迎来了属于它的春天[cite: 57]。\n【牌意】花开了，圆满，新世界的开始，开启下一阶段[cite: 57]。" }
-    ];
+      // --- 大阿尔卡纳 (Major Arcana) ---
+      { name: "0. 愚人 (The Fool)", symbol: "🌷", meaning: "【故事】米兰达夫人种下一颗郁金香种球，它带着好奇心悄悄离开了阳台去探索世界[cite: 13]。\n【牌意】梦的开始，对未来美好的期盼与期待。纯真、美好、充满可能[cite: 13]。" },
+      { name: "I. 魔术师 (The Magician)", symbol: "🌹", meaning: "【故事】彩虹尽头的月季花告诉郁金香：相信自己的力量[cite: 15]。\n【牌意】变幻的美丽。创造、聪慧、热情自信、善于表达[cite: 15]。\n【花语】青春美丽、活力、热情与希望[cite: 15]。" },
+      { name: "II. 女祭司 (The High Priestess)", symbol: "🪷", meaning: "【故事】池塘边只在月夜开放的白色昙花[cite: 17]。\n【牌意】昙花一现，刹那的美丽，寂寥的心。神秘、理性、纯洁、等待时机[cite: 17]。" },
+      { name: "III. 皇后 (The Empress)", symbol: "🌺", meaning: "【故事】玻璃花房里的粉色牡丹花，展现国色天香的气质与自信[cite: 19]。\n【牌意】富饶、温柔、美丽、热情，充满生命力[cite: 19]。" },
+      { name: "IV. 皇帝 (The Emperor)", symbol: "👑", meaning: "【故事】威严的帝王花，提醒探险者要打起十二分精神[cite: 21]。\n【牌意】胜利与荣耀。霸气、威严、权威、秩序与理智[cite: 21]。" },
+      { name: "V. 教皇 (The Hierophant)", symbol: "📖", meaning: "【故事】椅上自动开口说话的书本：人生中暂时不懂的事，到最后总会明白[cite: 23]。\n【牌意】精神的力量、灵魂的指引、教导与善于沟通[cite: 23]。" },
+      { name: "VI. 恋人 (The Lovers)", symbol: "💛", meaning: "【故事】日落晚霞中出现的金黄色心脏，象征情感的悸动[cite: 25]。\n【牌意】心动、缘分、幸福、志同道合、坠入爱河[cite: 25]。" },
+      { name: "VII. 战车 (The Chariot)", symbol: "🛒", meaning: "【故事】前往花园中心参加庆典，吹着风，知道自己准备好了[cite: 27]。\n【牌意】出发就现在！勇气、无畏、信心与奋斗[cite: 27]。" },
+      { name: "VIII. 力量 (Strength)", symbol: "🌸", meaning: "【故事】从石头缝隙中生长绽放的牵牛花[cite: 29]。\n【牌意】温柔的力量，以柔克刚，包容与执着[cite: 29]。" },
+      { name: "IX. 隐士 (The Hermit)", symbol: "🌼", meaning: "【故事】黑夜中借着星光向山顶前行的菊花[cite: 31]。\n【牌意】高洁、纯净、精神追求，孤独与寻找真理[cite: 31]。" },
+      { name: "X. 命运之轮 (Wheel of Fortune)", symbol: "⏰", meaning: "【故事】掌控花园白天与黑夜的水晶挂钟[cite: 33]。\n【牌意】过去与将来，四季流转，一切皆是运与缘[cite: 33]。" },
+      { name: "XI. 正义 (Justice)", symbol: "⚖️", meaning: "【故事】米兰达给植物按比例称配肥料[cite: 35]。\n【牌意】公正，决策，平衡，理性判断[cite: 35]。" },
+      { name: "XII. 倒吊人 (The Hanged Man)", symbol: "🙃", meaning: "【故事】向下开放的曼陀罗花：我只是在做我自己的事情[cite: 37]。\n【牌意】牺牲，换位思考，内在的平静与纯净[cite: 37]。" },
+      { name: "XIII. 死神 (Death)", symbol: "🦋", meaning: "【故事】金鱼草花田旁桌上的头骨种荚，生死循环，干枯中孕育新生[cite: 39]。\n【牌意】是结束也是开始，转变，新生[cite: 39]。" },
+      { name: "XIV. 节制 (Temperance)", symbol: "⏳", meaning: "【故事】花丛中的水沙漏，让心渐渐平静下来[cite: 41]。\n【牌意】把问题交给时间，平衡，理性，调和[cite: 41]。" },
+      { name: "XV. 恶魔 (The Devil)", symbol: "🕷️", meaning: "【故事】红蜘蛛悄悄爬上郁金香的叶片啃食[cite: 43]。\n【牌意】解不脱的结，束缚，悲伤，遭遇意外破坏[cite: 43]。" },
+      { name: "XVI. 高塔 (The Tower)", symbol: "🌩️", meaning: "【故事】闪电击中高山花园，郁金香从悬崖边掉落[cite: 45]。\n【牌意】毁灭既是重生，灾难，突如其来的伤害[cite: 45]。" },
+      { name: "XVII. 星星 (The Star)", symbol: "⭐", meaning: "【故事】月亮湖边倒映的星光与游吟诗人的歌声[cite: 47]。\n【牌意】疗愈，宁静，小希望，内心指引与灵感[cite: 47]。" },
+      { name: "XVIII. 月亮 (The Moon)", symbol: "🌕", meaning: "【故事】月升之时，郁金香沉下心思考是否要继续前行[cite: 49]。\n【牌意】欢乐后的平静，神秘，未知，谨慎地思考[cite: 49]。" },
+      { name: "XIX. 太阳 (The Sun)", symbol: "☀️", meaning: "【故事】太阳初生，昨夜的月亮湖化为溪流，郁金香启程[cite: 51]。\n【牌意】黑夜终会过去，希望、成功、信心与光明[cite: 51]。" },
+      { name: "XX. 审判 (Judgement)", symbol: "🎺", meaning: "【故事】跋山涉水后终于找到花园，音乐会庆祝凯旋[cite: 53]。\n【牌意】命运的号角已响起，考验，转变，启示[cite: 53]。" },
+      { name: "XXI. 世界 (The World)", symbol: "🌍", meaning: "【故事】米兰达夫人将郁金香捧起，花开迎来了属于它的春天[cite: 55]。\n【牌意】花开了，圆满，新世界的开始，开启下一阶段[cite: 55]。" },
 
-    const suits = ["权杖", "圣杯", "宝剑", "星币"];
-    const ranks = ["首牌", "2", "3", "4", "5", "6", "7", "8", "9", "10", "侍从", "骑士", "国王", "王后"];
-    suits.forEach(s => {
-      ranks.forEach(r => {
-        if (tarotDatabase.length < 78) {
-          tarotDatabase.push({
-            name: `${s}${r}`,
-            symbol: s === "权杖" ? "🪄" : s === "圣杯" ? "🏆" : s === "宝剑" ? "⚔️" : "🪙",
-            meaning: `这是来自【${s}元素】的指引，提示你在今日的行动、情感或思考中保持专注与平衡。`
-          });
-        }
-      });
-    });
+      // --- 权杖组 (Wands / The Spring) ---
+      { name: "权杖首牌 (Ace of Wands)", symbol: "🪄", meaning: "【故事】米兰达夫人用一把普通的铲子种下了花园里无数个春天[cite: 57]。\n【牌意】机会，热情，勇气，创造，工作机会[cite: 57]。" },
+      { name: "权杖二 (Two of Wands)", symbol: "🪄", meaning: "【牌意】决定，努力，选择，思考，调整，计划[cite: 58]。" },
+      { name: "权杖三 (Three of Wands)", symbol: "🪄", meaning: "【牌意】成长，事情进一步发展，快要成功[cite: 59]。" },
+      { name: "权杖四 (Four of Wands)", symbol: "🪄", meaning: "【牌意】成功，庆祝，和谐，繁荣[cite: 60]。" },
+      { name: "权杖五 (Five of Wands)", symbol: "🪄", meaning: "【牌意】混乱，破坏，意外，思绪混乱，计划混乱[cite: 61]。" },
+      { name: "权杖六 (Six of Wands)", symbol: "🪄", meaning: "【牌意】自信，重新出发，开启新计划，坚定自己内心的目标[cite: 62]。" },
+      { name: "权杖七 (Seven of Wands)", symbol: "🪄", meaning: "【牌意】纠结，自我斗争，思虑过多，计划不明确，选择，保护[cite: 63]。" },
+      { name: "权杖八 (Eight of Wands)", symbol: "🪄", meaning: "【牌意】意料之外，极速变化，快速[cite: 64]。" },
+      { name: "权杖九 (Nine of Wands)", symbol: "🪄", meaning: "【牌意】困住，困境，谨慎，无所事事，无从下手[cite: 65]。" },
+      { name: "权杖十 (Ten of Wands)", symbol: "🪄", meaning: "【牌意】积压，错过时机，休养，调整，无所事事[cite: 66]。" },
+      { name: "权杖侍从 (Page of Wands)", symbol: "🪄", meaning: "【牌意】热情，勇气，年轻，对未来充满憧憬与向往，一个好的开始与计划[cite: 67]。" },
+      { name: "权杖骑士 (Knight of Wands)", symbol: "🪄", meaning: "【牌意】前进，计划远行，努力工作，认真有热情，冲劲十足[cite: 68]。" },
+      { name: "权杖女王 (Queen of Wands)", symbol: "🪄", meaning: "【牌意】热情，阳光，开朗，细心，自信，平易近人[cite: 69]。" },
+      { name: "权杖国王 (King of Wands)", symbol: "🪄", meaning: "【牌意】坚毅，行动力决策力十足，有计划，有野心，坚强，有魅力[cite: 70]。" },
+
+      // --- 圣杯组 (Cups / The Summer) ---
+      { name: "圣杯首牌 (Ace of Cups)", symbol: "🏆", meaning: "【故事】米兰达夫人收藏的各式各样美丽花瓶[cite: 72]。\n【牌意】一段新的情感，新友谊，良好的情感体验[cite: 72]。" },
+      { name: "圣杯二 (Two of Cups)", symbol: "🏆", meaning: "【牌意】情感，缘分，愉快开心，良好的沟通交流，互换心声[cite: 73]。" },
+      { name: "圣杯三 (Three of Cups)", symbol: "🏆", meaning: "【牌意】合作，团体，相处良好，派对聚会[cite: 74]。" },
+      { name: "圣杯四 (Four of Cups)", symbol: "🏆", meaning: "【牌意】重新合作，得到外在帮助，重新取得联系，贵人相助[cite: 75]。" },
+      { name: "圣杯五 (Five of Cups)", symbol: "🏆", meaning: "【牌意】遭到破坏，小人，失去，悲伤，意料之外[cite: 76]。" },
+      { name: "圣杯六 (Six of Cups)", symbol: "🏆", meaning: "【牌意】镜中花。回忆，美好，温暖，治愈[cite: 77]。" },
+      { name: "圣杯七 (Seven of Cups)", symbol: "🏆", meaning: "【牌意】水中月。离开，悲伤，寻求新的方向[cite: 78]。" },
+      { name: "圣杯八 (Eight of Cups)", symbol: "🏆", meaning: "【牌意】离开，悲伤，寻求新的方向[cite: 79]。" },
+      { name: "圣杯九 (Nine of Cups)", symbol: "🏆", meaning: "【牌意】共同合作，索取，不公，压榨，利益不平等[cite: 80]。" },
+      { name: "圣杯十 (Ten of Cups)", symbol: "🏆", meaning: "【牌意】幸福，美满，成功，美好，快乐，庆祝[cite: 81]。" },
+      { name: "圣杯侍从 (Page of Cups)", symbol: "🏆", meaning: "【牌意】活泼可爱，心思细腻，感性，体贴，善于沟通，俏皮，缺少专注力[cite: 82]。" },
+      { name: "圣杯骑士 (Knight of Cups)", symbol: "🏆", meaning: "【牌意】温柔，体贴，心思细腻，白马王子，有创意，浪漫[cite: 83]。" },
+      { name: "圣杯女王 (Queen of Cups)", symbol: "🏆", meaning: "【牌意】温柔，感性，浪漫，有艺术天赋，善于聆听，纯真善良[cite: 84]。" },
+      { name: "圣杯国王 (King of Cups)", symbol: "🏆", meaning: "【牌意】仁慈，温柔，体贴，情绪稳定，善于表达[cite: 85]。" },
+
+      // --- 星币组 (Pentacles / The Autumn) ---
+      { name: "星币首牌 (Ace of Pentacles)", symbol: "🪙", meaning: "【故事】花园的秋天，米兰达收获了一颗红石榴[cite: 87]。\n【牌意】机会，财富起点[cite: 87]。" },
+      { name: "星币二 (Two of Pentacles)", symbol: "🪙", meaning: "【牌意】灵活，平衡[cite: 88]。" },
+      { name: "星币三 (Three of Pentacles)", symbol: "🪙", meaning: "【牌意】团队合作，分享果实，和谐，协调[cite: 89]。" },
+      { name: "星币四 (Four of Pentacles)", symbol: "🪙", meaning: "【牌意】储存，保守，积累财富，安全感[cite: 90]。" },
+      { name: "星币五 (Five of Pentacles)", symbol: "🪙", meaning: "【牌意】时机不佳，等待时机，遭遇命运打击，意外，危机，孤独凄凉[cite: 91]。" },
+      { name: "星币六 (Six of Pentacles)", symbol: "🪙", meaning: "【牌意】帮助，分配，好运气，资源共享[cite: 92]。" },
+      { name: "星币七 (Seven of Pentacles)", symbol: "🪙", meaning: "【牌意】耐心，考虑，选择，等待时机，时机未到[cite: 93]。" },
+      { name: "星币八 (Eight of Pentacles)", symbol: "🪙", meaning: "【牌意】勤劳，努力，积累财富，专注[cite: 94]。" },
+      { name: "星币九 (Nine of Pentacles)", symbol: "🪙", meaning: "【牌意】丰饶，富有，安稳，享受，财富自由，享受成果，安全感[cite: 95]。" },
+      { name: "星币十 (Ten of Pentacles)", symbol: "🪙", meaning: "【牌意】繁荣，富饶，庆典，成功，享受[cite: 96]。" },
+      { name: "星币侍从 (Page of Pentacles)", symbol: "🪙", meaning: "【牌意】务实，稳重，踏实，有潜力[cite: 97]。" },
+      { name: "星币骑士 (Knight of Pentacles)", symbol: "🪙", meaning: "【牌意】有责任，努力，稳重，踏实，有耐心，会用心认真努力干好每一件事[cite: 98]。" },
+      { name: "星币女王 (Queen of Pentacles)", symbol: "🪙", meaning: "【牌意】善良，繁荣，务实，稳健，有良心的企业家[cite: 99]。" },
+      { name: "星币国王 (King of Pentacles)", symbol: "🪙", meaning: "【牌意】沉稳，踏实，可靠，富有，保守，大商人[cite: 100]。" },
+
+      // --- 宝剑组 (Swords / The Winter) ---
+      { name: "宝剑首牌 (Ace of Swords)", symbol: "⚔️", meaning: "【故事】冬天用剪刀修剪花园植物，确保来年春天生长得更好[cite: 102]。\n【牌意】挑战，危机，伤害，问题[cite: 102]。" },
+      { name: "宝剑二 (Two of Swords)", symbol: "⚔️", meaning: "【牌意】选择，逃避，思考，矛盾，内心混乱[cite: 103]。" },
+      { name: "宝剑三 (Three of Swords)", symbol: "⚔️", meaning: "【牌意】修剪亦是痛苦，也是成长。修剪，整理，成长，伤害[cite: 104]。" },
+      { name: "宝剑四 (Four of Swords)", symbol: "⚔️", meaning: "【牌意】疗养，回避, 停止, 休息, 身心俱疲, 休战[cite: 105]。" },
+      { name: "宝剑五 (Five of Swords)", symbol: "⚔️", meaning: "【牌意】外面的寒风吹进花房，混乱，小团体，矛盾冲突[cite: 106]。" },
+      { name: "宝剑六 (Six of Swords)", symbol: "⚔️", meaning: "【牌意】离开舒适圈，挑战，前途未知[cite: 107]。" },
+      { name: "宝剑七 (Seven of Swords)", symbol: "⚔️", meaning: "【牌意】飞蛾扑火，只为那一瞬的温暖。幻想，迷茫，内心混乱[cite: 108]。" },
+      { name: "宝剑八 (Eight of Swords)", symbol: "⚔️", meaning: "【牌意】只是一个将自己内心困住的牢笼。保护，牢笼，向往自由，被束缚，圈养[cite: 109]。" },
+      { name: "宝剑九 (Nine of Swords)", symbol: "⚔️", meaning: "【牌意】梦中的飞蛾在黑暗中迷失，被蜘蛛网粘住。危机四伏，恐慌害怕，被禁锢[cite: 110]。" },
+      { name: "宝剑十 (Ten of Swords)", symbol: "⚔️", meaning: "【牌意】痛苦，结束，死亡，悲伤，孤独，精神压力太大[cite: 111]。" },
+      { name: "宝剑侍从 (Page of Swords)", symbol: "⚔️", meaning: "【牌意】机遇与挑战，敏锐，谨慎，观察事物变化[cite: 112]。" },
+      { name: "宝剑骑士 (Knight of Swords)", symbol: "⚔️", meaning: "【牌意】行动力快，迅速，勇往直前，做好准备面对挑战，马上将会有答案[cite: 113]。" },
+      { name: "宝剑女王 (Queen of Swords)", symbol: "⚔️", meaning: "【牌意】理性，冷静，独立，果断，足智多谋，原则性强[cite: 114]。" },
+      { name: "宝剑国王 (King of Swords)", symbol: "⚔️", meaning: "【牌意】权威，公正，目标明确，洞察全局，理性克制[cite: 115]。" }
+    ];
 
     let hasSelected = false;
 
-    // 点击 Start 开启占卜
     function startApp() {
       document.getElementById('cover-view').classList.add('hidden');
     }
 
-    // 初始化生成 78 张扇形排列的卡牌
     function initDeck() {
       const container = document.getElementById('fanContainer');
       container.innerHTML = '';
       hasSelected = false;
-
-      // 隐藏返回按钮
       document.getElementById('resetBtn').style.display = 'none';
 
       const totalCards = 78;
@@ -331,7 +377,6 @@
       }
     }
 
-    // 点击抽牌逻辑
     function selectCard(selectedCard, index) {
       if (hasSelected) return;
       hasSelected = true;
@@ -341,7 +386,6 @@
       document.getElementById(`symbol-${index}`).innerText = randomCard.symbol;
       document.getElementById(`name-${index}`).innerText = randomCard.name;
 
-      // 选中的牌翻面并高亮，其余牌淡出
       const allCards = document.querySelectorAll('.tarot-card');
       allCards.forEach((card) => {
         if (card === selectedCard) {
@@ -354,7 +398,6 @@
         }
       });
 
-      // 显示解读结果
       const resultBox = document.getElementById("resultBox");
       resultBox.innerHTML = `
         <div class="result-title">🌟 你的今日运势指引 🌟</div>
@@ -364,25 +407,17 @@
         </div>
       `;
 
-      // 显示黄色的返回/重置按钮
       document.getElementById('resetBtn').style.display = 'block';
     }
 
-    // 重置并返回封面
     function resetApp() {
-      // 1. 显示封面
       document.getElementById('cover-view').classList.remove('hidden');
-      
-      // 2. 恢复初始提示文字
       document.getElementById("resultBox").innerHTML = `
         <div id="resultText" class="result-desc">请在上方扇形牌阵中凭直觉点击抽取一张塔罗牌。</div>
       `;
-
-      // 3. 重新洗牌生成新的 78 张牌阵
       initDeck();
     }
 
-    // 页面加载完成后自动初始化牌阵
     window.onload = initDeck;
   </script>
 </body>
