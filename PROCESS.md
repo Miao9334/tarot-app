@@ -1,7 +1,5 @@
 # Process Journal
 
-This document records the complete development journey of the **How is your day? - Tarot** project, including initial ideation, design iterations, user testing, and the integration of AI assistance.
-
 ## 1. Initial Concept & Ideation
 - **Inspiration**: I wanted to create an interactive web application that merges aesthetic visual appeal with lightweight psychological feedback for everyday life.
 - **Core Interaction Loop**:
@@ -25,7 +23,7 @@ This document records the complete development journey of the **How is your day?
 ## 4. AI Tool Usage
 - **Adopted Suggestions**:
   - **ChatGPT** use it to generate the initial background imagery (`background.png`) and the tarot cover art (`cover.png`) to establish the visual aesthetic.
-  - **Gemini** use it in an iterative process to repeatedly debug and refine the frontend code, optimizing the CSS 3D card-flip matrix (`preserve-3d` and `backface-visibility: hidden`) and ensuring smooth interactions across the 78-card fan layout.
+  - **Gemini** use it in an iterative process to repeatedly debug and refine the frontend code, optimizing the CSS 3D card-flip matrix and ensuring smooth interactions across the 78-card fan layout.
 
 ## 5. Credits & Development History
 - Maintained a consistent and meaningful Git commit history throughout the development process, recording key feature updates in accordance with course guidelines.
